@@ -1,0 +1,3 @@
+ali123  := 16 + 3 ; b := ( print ( a, a - 1), 10 + a ) ; print (b)
+
+if a ( print (a))
