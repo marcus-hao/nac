@@ -1,8 +1,10 @@
-#include "include/lexer.h"
+  #include "include/lexer.h"
 #include "include/token.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+
+#define MIN(a, b)   a < b ? a : b
 
 lexer_T* lexer_init(char* src)
 {
@@ -17,10 +19,7 @@ lexer_T* lexer_init(char* src)
 
 char lexer_peek(lexer_T* lexer, int step)
 {
-    if (lexer->src[lexer->current + step] > lexer->src_size)
-        /* If it exceeds the src_size, then we just return the current character */
-        return lexer->c;
-    return lexer->src[lexer->current + step];
+    return lexer->src[MIN(lexer->current + step, lexer->src_size)];
 }
 
 void lexer_advance(lexer_T* lexer)
@@ -81,12 +80,7 @@ token_T* lexer_parse_num(lexer_T* lexer)
 }
 
 void lexer_skip_whitespace(lexer_T* lexer)
-{
-    /* TODO: Current lexer does not skip multiple whitespace characters. */
-    // if (lexer->c == 0x20 || lexer->c == 0x09 || lexer->c == 0x0D || lexer->c == 0x0A) {
-    //     lexer_advance(lexer);   // Basically, we skip if ther's a ws character
-    // }
-    
+{   
     while (lexer->c == 0x20 || lexer->c == 0x09 || lexer->c == 0x0D || lexer->c == 0x0A) {
         lexer_advance(lexer);
     }
@@ -105,6 +99,15 @@ token_T* lexer_tokenize(lexer_T* lexer)
             return lexer_parse_num(lexer);
 
         switch (lexer->c) {
+        /**
+         * TODO: There is a bug that infinite loops when input string is like the following
+         *  x := 5
+         * or
+         * x := 5 ; b := (print(a, a-1), x)
+         * The following string breaks properly ???
+         * x := 5 ; b := (print(a, a-1), x) ; print
+         * Loop is happening because of lexer_peek
+        */
         case ':': {
             if (lexer_peek(lexer, 1) == '=')
                 return lexer_advance_with(lexer, lexer_advance_with(lexer, init_token(":=", TOKEN_DEFINE)));
