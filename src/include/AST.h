@@ -10,6 +10,10 @@ typedef struct AST_STRUCT {
 
 AST_T* init_ast(token_T* token, AST_T* left, AST_T* right);
 
-void print_ast(AST_T* node, int depth);
+void free_ast(AST_T* root);
+
+void print_ast(AST_T* root, int depth);
+
+void print_tree(AST_T* node);
 
 #endif
