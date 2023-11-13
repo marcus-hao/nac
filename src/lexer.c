@@ -99,15 +99,6 @@ token_T* lexer_tokenize(lexer_T* lexer)
             return lexer_parse_num(lexer);
 
         switch (lexer->c) {
-        /**
-         * TODO: There is a bug that infinite loops when input string is like the following
-         *  x := 5
-         * or
-         * x := 5 ; b := (print(a, a-1), x)
-         * The following string breaks properly ???
-         * x := 5 ; b := (print(a, a-1), x) ; print
-         * Loop is happening because of lexer_peek
-        */
         case ':': {
             if (lexer_peek(lexer, 1) == '=')
                 return lexer_advance_with(lexer, lexer_advance_with(lexer, init_token(":=", TOKEN_DEFINE)));
@@ -125,6 +116,8 @@ token_T* lexer_tokenize(lexer_T* lexer)
         case ')': return lexer_advance_current(lexer, TOKEN_RPAREN);
         case '+': return lexer_advance_current(lexer, TOKEN_ADD);
         case '-': return lexer_advance_current(lexer, TOKEN_SUB);
+        case '*': return lexer_advance_current(lexer, TOKEN_MUL);
+        case '/': return lexer_advance_current(lexer, TOKEN_DIV);
         case ';': return lexer_advance_current(lexer, TOKEN_SEMI);
         case '\0': break;
         // case EOF: return token_advance_current(lexer, TOKEN_EOF);
