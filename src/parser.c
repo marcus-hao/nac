@@ -29,6 +29,7 @@ token_T* parser_eat(parser_T* parser, int type)
     }
 
     printf("Eating token %s\n", parser->token->value);
+    temp_token = parser->token;     // this is an ugly hack
     token_T* eaten_token = parser->token;
     parser->token = lexer_tokenize(parser->lexer);
 
@@ -45,7 +46,7 @@ AST_T* parser_parse_stmt_list(parser_T* parser)
     AST_T* stmt = parser_parse_stmt(parser);
     AST_T* stmt_list_prime = parser_parse_stmt_list_prime(parser);
 
-    return init_ast(NULL, stmt, stmt_list_prime);
+    return init_ast(NULL, stmt, stmt_list_prime, "<stmt_list>");
 }
 
 AST_T* parser_parse_stmt(parser_T* parser)
@@ -58,7 +59,7 @@ AST_T* parser_parse_stmt(parser_T* parser)
         if (parser->token->type == TOKEN_DEFINE) {
             return parser_parse_assignment(parser);
         }
-        
+
         return parser_parse_E(parser);
     }
     else {
@@ -75,7 +76,7 @@ AST_T* parser_parse_stmt_list_prime(parser_T* parser)
         AST_T* stmt = parser_parse_stmt(parser);
         AST_T* stmt_list_prime = parser_parse_stmt_list_prime(parser);
 
-        return init_ast(NULL, stmt, stmt_list_prime);
+        return init_ast(NULL, stmt, stmt_list_prime, "<stmt_list_prime>");
     } 
 
     return NULL;
@@ -100,21 +101,21 @@ AST_T* parser_parse_print(parser_T* parser)
     }
     
     parser_eat(parser, TOKEN_RPAREN);
-    return init_ast(print_token, NULL, expr);
+    return init_ast(print_token, NULL, expr, "<print>");
 }
 
 AST_T* parser_parse_assignment(parser_T* parser)
 {
     token_T* id_token = temp_token;     // the variable must come before `:=`
-    parser_eat(parser, TOKEN_DEFINE);
-    token_T* define_token = temp_token;
+    token_T* define_token = parser_eat(parser, TOKEN_DEFINE);
+
     AST_T* expr = parser_parse_E(parser);
 
     if (expr == NULL) {
         printf("[SyntaxError] Missing expression on the right hand side of assignment.\n");
         exit(1);
     }
-    return init_ast(define_token, init_ast(id_token, NULL, NULL), expr);
+    return init_ast(define_token, init_ast(id_token, NULL, NULL, "<F>"), expr, "<assignment>");
 }
 
 AST_T* parser_parse_T(parser_T* parser)
@@ -126,17 +127,17 @@ AST_T* parser_parse_T(parser_T* parser)
     if (Tprime == NULL)
         return factor;
 
-    return init_ast(NULL, factor, Tprime);
+    return init_ast(NULL, factor, Tprime, "<T>");
 }
 
 AST_T* parser_parse_F(parser_T* parser)
 {
     if (parser->token->type == TOKEN_ID) {
         token_T* id = parser_eat(parser, TOKEN_ID);
-        return init_ast(id, NULL, NULL);
+        return init_ast(id, NULL, NULL, "<F>");
     } else if (parser->token->type == TOKEN_NUM) {
         token_T* num = parser_eat(parser, TOKEN_NUM);
-        return init_ast(num, NULL, NULL);
+        return init_ast(num, NULL, NULL, "<F>");
     } else if (parser->token->type == TOKEN_LPAREN) {
         parser_eat(parser, TOKEN_LPAREN);
         AST_T* expr = parser_parse_E(parser);
@@ -159,7 +160,7 @@ AST_T* parser_parse_Tprime(parser_T* parser)
             exit(1);
         }
 
-        return init_ast(mul_token, F, Tprime);
+        return init_ast(mul_token, F, Tprime, "<Tprime>");
     } else if (parser->token->type == TOKEN_DIV) {
         token_T* div_token = parser_eat(parser, TOKEN_DIV);
         AST_T* F = parser_parse_F(parser);
@@ -170,7 +171,7 @@ AST_T* parser_parse_Tprime(parser_T* parser)
             exit(1);
         }
 
-        return init_ast(div_token, F, Tprime);
+        return init_ast(div_token, F, Tprime, "<Tprime>");
     }
 
     return NULL;
@@ -185,7 +186,7 @@ AST_T* parser_parse_E(parser_T* parser)
     if (Eprime == NULL)
         return T;
 
-    return init_ast(NULL, T, Eprime);
+    return init_ast(NULL, T, Eprime, "<E>");
 }
 
 AST_T* parser_parse_Eprime(parser_T* parser)
@@ -200,7 +201,7 @@ AST_T* parser_parse_Eprime(parser_T* parser)
             exit(1);
         }
 
-        return init_ast(add_token, T, Eprime);
+        return init_ast(add_token, T, Eprime, "<Eprime>");
     } else if (parser->token->type == TOKEN_SUB) {
         token_T* sub_token = parser_eat(parser, TOKEN_SUB);
         AST_T* T = parser_parse_T(parser);
@@ -211,7 +212,7 @@ AST_T* parser_parse_Eprime(parser_T* parser)
             exit(1);
         }
 
-        return init_ast(sub_token, T, Eprime);
+        return init_ast(sub_token, T, Eprime, "<Eprime>");
     }
 
     return NULL;
