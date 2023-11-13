@@ -1,42 +1,54 @@
+#include "include/AST.h"
 #include "include/lexer.h"
+#include "include/nac.h"
+#include "include/parser.h"
 #include "include/token.h"
 #include <stdio.h>
 #include <stdlib.h> // Include this for memory allocation functions
+#include <string.h>
+#include <unistd.h>
 
-lexer_T* lexer_init_from_file(const char* filename) {
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("Error: Unable to open file %s\n", filename);
+char* read_file(const char* filename)
+{
+    FILE* fp;
+    char* line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    fp = fopen(filename, "rb");
+    if (fp == NULL) {
+        printf("Error reading file %s\n", filename);
         exit(1);
     }
 
-    fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
+    char* buffer = (char*) calloc(1, sizeof(char));
+    buffer[0] = '\0';
 
-    char* src = (char*)malloc(file_size + 1); // +1 for null terminator
-    fread(src, 1, file_size, file);
-    src[file_size] = '\0';
-
-    fclose(file);
-
-    return lexer_init(src);
-}
-
-int main() {
-    lexer_T* lexer = lexer_init_from_file("examples/main.nac"); // Change the filename to your source code file
-
-    token_T* token;
-    while ((token = lexer_tokenize(lexer))->type != TOKEN_EOF) {
-        // Process or print the token here as needed
-        char* str = token_to_str(token);
-        printf("%s\n", str);
-        free(str);
+    while ((read = getline(&line, &len, fp)) != -1) {
+        buffer = (char*) realloc(buffer, (strlen(buffer) + strlen(line) + 1) * sizeof(char));
+        strcat(buffer, line);
     }
 
-    // Clean up
-    free(lexer->src);
-    free(lexer);
+    fclose(fp);
+    if (line)
+        free(line);
     
-    return 0;
+    return buffer;
+}
+
+void compile(char* src)
+{
+    lexer_T* lexer = lexer_init(src);
+    parser_T* parser = init_parser(lexer);
+    AST_T* root = parser_parse_program(parser);
+    print_ast(root, 0);
+    free(lexer);
+    free_ast(root);
+}
+
+void compile_file(const char* filename)
+{
+    char* src = read_file(filename);
+    compile(src);
+    free(src);
 }
