@@ -116,6 +116,10 @@ AST_T* parser_parse_assignment(parser_T* parser)
     token_T* define_token = temp_token;
     AST_T* expr = parser_parse_E(parser);
 
+    if (expr == NULL) {
+        printf("[SyntaxError] Missing expression on the right hand side of assignment.\n");
+        exit(1);
+    }
     return init_ast(define_token, init_ast(id_token, NULL, NULL), expr);
 }
 
