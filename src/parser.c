@@ -29,14 +29,10 @@ token_T* parser_eat(parser_T* parser, int type)
     }
 
     printf("Eating token %s\n", parser->token->value);
-    
-    temp_token = parser->token;     // store the previous token
     token_T* eaten_token = parser->token;
-
     parser->token = lexer_tokenize(parser->lexer);
 
     return eaten_token;
-    // return parser->token;
 }
 
 AST_T* parser_parse_program(parser_T* parser)
@@ -58,14 +54,13 @@ AST_T* parser_parse_stmt(parser_T* parser)
         return parser_parse_print(parser);
     } else if (parser->token->type == TOKEN_ID) {
         parser_eat(parser, TOKEN_ID);
-        // token_T* token = parser_eat(parser, TOKEN_ID);
 
         if (parser->token->type == TOKEN_DEFINE) {
             return parser_parse_assignment(parser);
         }
+        
         return parser_parse_E(parser);
     }
-    // } else if (parser->token->type == TOKEN)
     else {
         printf("[SyntaxError] Unexpected token %s, expected TOKEN_PRINT or TOKEN_ID\n", temp_token->value);
         exit(1);
@@ -110,7 +105,6 @@ AST_T* parser_parse_print(parser_T* parser)
 
 AST_T* parser_parse_assignment(parser_T* parser)
 {
-    // token_T* id_token = parser_eat(parser, TOKEN_ID);
     token_T* id_token = temp_token;     // the variable must come before `:=`
     parser_eat(parser, TOKEN_DEFINE);
     token_T* define_token = temp_token;
