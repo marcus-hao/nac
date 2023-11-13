@@ -36,15 +36,11 @@ const char* token_type_to_str(int type)
 
 char* token_to_str(token_T* token)
 {
-    // const char* token_type_str = token_type_to_str(token->type);
-    // const char* template = "{ type = %s, int = %d, value = %s }";
-    // char* str = calloc(strlen(template) + strlen(token_type_str) + 8, sizeof(char));
+    const char* token_type_str = token_type_to_str(token->type);
+    const char* template = "<type = %s, int = %d, value = `%s` >";
+    char* str = calloc(strlen(template) + strlen(token_type_str) + 8, sizeof(char));
 
-    // sprintf(str, template, token_type_str, token->type, token->value);
-
-    const char* template = "%s";
-    char* str = calloc(strlen(template) + strlen(token->value) + 1, sizeof(char));
-    sprintf(str, template, token->value);
+    sprintf(str, template, token_type_str, token->type, token->value);
     
     return str;
 }

@@ -4,7 +4,7 @@
 #include "include/parser.h"
 #include "include/token.h"
 #include <stdio.h>
-#include <stdlib.h> // Include this for memory allocation functions
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -36,6 +36,19 @@ char* read_file(const char* filename)
     return buffer;
 }
 
+void nac_lex(char * src)
+{
+    lexer_T* lexer = lexer_init(src);
+
+    token_T* token;
+    while ((token = lexer_tokenize(lexer))->type != TOKEN_EOF) {
+        char* str = token_to_str(token);
+        printf("%s\n", str);
+        free(str);
+    }
+    free(lexer);
+}
+
 void compile(char* src)
 {
     lexer_T* lexer = lexer_init(src);
@@ -49,6 +62,10 @@ void compile(char* src)
 void compile_file(const char* filename)
 {
     char* src = read_file(filename);
+    printf("The language to parse is the following:\n");
+    printf("%s\n", src);
+    /* For demo, we show how the lexer performs tokenization. */
+    nac_lex(src);
     compile(src);
     free(src);
 }

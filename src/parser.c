@@ -28,7 +28,6 @@ token_T* parser_eat(parser_T* parser, int type)
         exit(1);
     }
 
-    printf("Eating token %s\n", parser->token->value);
     token_T* eaten_token = parser->token;
     parser->token = lexer_tokenize(parser->lexer);
 
