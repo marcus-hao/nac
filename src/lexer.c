@@ -58,9 +58,6 @@ token_T* lexer_parse_id(lexer_T* lexer)
         lexer_advance(lexer);
     }
 
-    if (strcmp(value, IF_KEYWORD) == 0)
-        return init_token(value, TOKEN_IF);
-    
     if (strcmp(value, PRINT_KEYWORD)  == 0)
         return init_token(value, TOKEN_PRINT);
 
