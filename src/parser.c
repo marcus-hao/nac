@@ -7,6 +7,9 @@
 
 token_T* temp_token;    // Quick hack
 
+/*
+ * Initializes the parser.
+ */
 parser_T* init_parser(lexer_T* lexer)
 {
     parser_T* parser = calloc(1, sizeof(struct PARSER_STRUCT));
@@ -16,6 +19,9 @@ parser_T* init_parser(lexer_T* lexer)
     return parser;
 }
 
+/*
+ * Eats the current token and moves to the next.
+ */
 token_T* parser_eat(parser_T* parser, int type)
 {
     if (parser->token == NULL) {
@@ -34,11 +40,17 @@ token_T* parser_eat(parser_T* parser, int type)
     return eaten_token;
 }
 
+/*
+ * Parses <program>.
+ */
 AST_T* parser_parse_program(parser_T* parser)
 {
     return parser_parse_stmt_list(parser);
 }
 
+/*
+ * Parses <stmt_list>.
+ */
 AST_T* parser_parse_stmt_list(parser_T* parser)
 {
     AST_T* stmt = parser_parse_stmt(parser);
@@ -47,6 +59,9 @@ AST_T* parser_parse_stmt_list(parser_T* parser)
     return init_ast(NULL, stmt, stmt_list_prime);
 }
 
+/*
+ * Parses <stmt>.
+ */
 AST_T* parser_parse_stmt(parser_T* parser)
 {
     if (parser->token->type == TOKEN_PRINT) {
@@ -64,9 +79,12 @@ AST_T* parser_parse_stmt(parser_T* parser)
         printf("[SyntaxError] Unexpected token %s, expected TOKEN_PRINT or TOKEN_ID\n", temp_token->value);
         exit(1);
     }
-    return NULL;    // epsilon
+    return NULL;
 }
 
+/*
+ * Parses <stmt_list_prime>.
+ */
 AST_T* parser_parse_stmt_list_prime(parser_T* parser)
 {
     if (parser->token->type == TOKEN_SEMI) {
@@ -80,6 +98,9 @@ AST_T* parser_parse_stmt_list_prime(parser_T* parser)
     return NULL;
 }
 
+/*
+ * Parses <print>.
+ */
 AST_T* parser_parse_print(parser_T* parser)
 {
     
@@ -102,6 +123,9 @@ AST_T* parser_parse_print(parser_T* parser)
     return init_ast(print_token, NULL, expr);
 }
 
+/*
+ * Parses <assignment>.
+ */
 AST_T* parser_parse_assignment(parser_T* parser)
 {
     token_T* id_token = temp_token;     // the variable must come before `:=`
@@ -116,6 +140,9 @@ AST_T* parser_parse_assignment(parser_T* parser)
     return init_ast(define_token, init_ast(id_token, NULL, NULL), expr);
 }
 
+/*
+ * Parses <T>.
+ */
 AST_T* parser_parse_T(parser_T* parser)
 {
     AST_T* factor = parser_parse_F(parser);
@@ -128,6 +155,9 @@ AST_T* parser_parse_T(parser_T* parser)
     return init_ast(NULL, factor, Tprime);
 }
 
+/*
+ * Parses <F>.
+ */
 AST_T* parser_parse_F(parser_T* parser)
 {
     if (parser->token->type == TOKEN_ID) {
@@ -146,6 +176,9 @@ AST_T* parser_parse_F(parser_T* parser)
     return NULL;
 }
 
+/*
+ * Parses <Tprime>.
+ */
 AST_T* parser_parse_Tprime(parser_T* parser)
 {
     if (parser->token->type == TOKEN_MUL) {
@@ -175,6 +208,9 @@ AST_T* parser_parse_Tprime(parser_T* parser)
     return NULL;
 }
 
+/*
+ * Parses <E>.
+ */
 AST_T* parser_parse_E(parser_T* parser)
 {
     AST_T* T = parser_parse_T(parser);
@@ -187,6 +223,9 @@ AST_T* parser_parse_E(parser_T* parser)
     return init_ast(NULL, T, Eprime);
 }
 
+/*
+ * Parses <Eprime>.
+ */
 AST_T* parser_parse_Eprime(parser_T* parser)
 {
     if (parser->token->type == TOKEN_ADD) {

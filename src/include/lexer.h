@@ -4,10 +4,10 @@
 #include <stdlib.h>
 
 typedef struct LEXER_STRUCT {
-    char* src;
-    size_t src_size;
-    unsigned int current;
-    char c;
+    char* src;              /* Buffer */
+    size_t src_size;        /* Size of the buffer */
+    unsigned int current;   /* Pointer to the current character in the buffer */
+    char c;                 /* The current character */
 } lexer_T;
 
 lexer_T* lexer_init(char* src);                 /* Initializes the lexer */
