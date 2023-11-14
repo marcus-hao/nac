@@ -8,6 +8,9 @@
 #include <string.h>
 #include <unistd.h>
 
+/*
+ * Reads the input file and returns a character buffer.
+ */
 char* read_file(const char* filename)
 {
     FILE* fp;
@@ -36,6 +39,11 @@ char* read_file(const char* filename)
     return buffer;
 }
 
+/*
+ * Performs lexical analysis to print the sequence of tokens.
+ *
+ * This function is only used for demo purposes.
+ */
 void nac_lex(char * src)
 {
     lexer_T* lexer = lexer_init(src);
@@ -49,6 +57,11 @@ void nac_lex(char * src)
     free(lexer);
 }
 
+/*
+ * Performs lexical and syntax analysis of the source code.
+ * 
+ * This function is called by `compile_file`.
+ */
 void compile(char* src)
 {
     lexer_T* lexer = lexer_init(src);
@@ -59,6 +72,11 @@ void compile(char* src)
     free_ast(root);
 }
 
+/*
+ * Performs lexical and syntax analysis of the input file.
+ * 
+ * This function calls `compile`.
+ */
 void compile_file(const char* filename)
 {
     char* src = read_file(filename);
