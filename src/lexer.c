@@ -4,8 +4,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MIN(a, b)   a < b ? a : b
+#define MIN(a, b)   a < b ? a : b   /** Minimum between two variables */
 
+/*
+ * This function takes in an input buffer and initializes the lexer with it.
+ */
 lexer_T* lexer_init(char* src)
 {
     lexer_T* lexer = calloc(1, sizeof(struct LEXER_STRUCT));
@@ -17,11 +20,20 @@ lexer_T* lexer_init(char* src)
     return lexer;
 }
 
+/*
+ * Looks `step` characters ahead of the current character and returns it
+ * if it is within the bounds of the buffer.
+ * 
+ * This function is used for scanning the `:=` token.
+ */
 char lexer_peek(lexer_T* lexer, int step)
 {
     return lexer->src[MIN(lexer->current + step, lexer->src_size)];
 }
 
+/*
+ * Moves the lexer one character forward.
+ */
 void lexer_advance(lexer_T* lexer)
 {
     /* Literally just moves the pointer forward one step for the string */
@@ -29,9 +41,13 @@ void lexer_advance(lexer_T* lexer)
     lexer->c = lexer->src[lexer->current];
 }
 
+/*
+ * Moves the lexer one character forward and returns the token.
+ * This function is only used for the symbols `+`, `-`, `*`, `/`,
+ * `(`, `)`, `,`, `;`.
+ */
 token_T* lexer_advance_current(lexer_T* lexer, int type)
 {
-    /* This function is only used for the "other" characters */
     char* value = calloc(2, sizeof(char));
     value[0] = lexer->c;
     value[1] = '\0';
@@ -42,12 +58,21 @@ token_T* lexer_advance_current(lexer_T* lexer, int type)
     return token;
 }
 
+/*
+ * Moves the lexer one character forward when it is passed with the given
+ * token. The token passed is also returned.
+ * 
+ * This function is to be used when scanning the `:=` and `!=` tokens.
+ */
 token_T* lexer_advance_with(lexer_T* lexer, token_T* token)
 {
     lexer_advance(lexer);
     return token;
 }
 
+/* 
+ * Returns an identifer with multiple-characters.
+ */
 token_T* lexer_parse_id(lexer_T* lexer)
 {
     char* value = calloc(1, sizeof(char));
@@ -67,6 +92,9 @@ token_T* lexer_parse_id(lexer_T* lexer)
     return init_token(value, TOKEN_ID);
 }
 
+/*
+ * Returns a number with multiple-characters. 
+ */
 token_T* lexer_parse_num(lexer_T* lexer)
 {
     char* value = calloc(1, sizeof(char));
@@ -79,6 +107,9 @@ token_T* lexer_parse_num(lexer_T* lexer)
     return init_token(value, TOKEN_NUM);
 }
 
+/*
+ * Skips whitespace characters.
+ */
 void lexer_skip_whitespace(lexer_T* lexer)
 {   
     while (lexer->c == 0x20 || lexer->c == 0x09 || lexer->c == 0x0D || lexer->c == 0x0A) {
@@ -86,9 +117,13 @@ void lexer_skip_whitespace(lexer_T* lexer)
     }
 }
 
+/*
+ * Begins tokenizing the characters.
+ * 
+ * This is the main driver of the lexer.
+ */
 token_T* lexer_tokenize(lexer_T* lexer)
 {
-    /* Main driver for the lexer */
     while (lexer->c != '\0') {
         lexer_skip_whitespace(lexer);
 
@@ -120,7 +155,6 @@ token_T* lexer_tokenize(lexer_T* lexer)
         case '/': return lexer_advance_current(lexer, TOKEN_DIV);
         case ';': return lexer_advance_current(lexer, TOKEN_SEMI);
         case '\0': break;
-        // case EOF: return token_advance_current(lexer, TOKEN_EOF);
         default: printf("[ERROR]: Unexpected character `%c`\n", lexer->c); exit(1); break;
         }
     }
