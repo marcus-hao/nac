@@ -17,7 +17,6 @@ const char* token_type_to_str(int type)
     switch(type) {
     case TOKEN_ID: return "TOKEN_ID";
     case TOKEN_NUM: return "TOKEN_NUM";
-    case TOKEN_IF: return "TOKEN_IF";
     case TOKEN_COMMA: return "TOKEN_COMMA";
     case TOKEN_NOTEQ: return "TOKEN_NOTEQ";
     case TOKEN_DEFINE: return "TOKEN_DEFINE";

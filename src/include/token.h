@@ -2,7 +2,6 @@
 #define TOKEN_H
 
 /* Reserved Keywords*/
-#define IF_KEYWORD "if"
 #define PRINT_KEYWORD "print"
 
 typedef struct TOKEN_STRUCT {
@@ -10,7 +9,6 @@ typedef struct TOKEN_STRUCT {
     enum {
         TOKEN_ID,
         TOKEN_NUM,
-        TOKEN_IF,
         TOKEN_COMMA,
         TOKEN_NOTEQ,
         TOKEN_DEFINE,
