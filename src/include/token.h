@@ -18,6 +18,8 @@ typedef struct TOKEN_STRUCT {
         TOKEN_RPAREN,
         TOKEN_ADD,
         TOKEN_SUB,
+        TOKEN_MUL,
+        TOKEN_DIV,
         TOKEN_SEMI,
         TOKEN_PRINT,
         TOKEN_EOF

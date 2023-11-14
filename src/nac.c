@@ -1,42 +1,71 @@
+#include "include/AST.h"
 #include "include/lexer.h"
+#include "include/nac.h"
+#include "include/parser.h"
 #include "include/token.h"
 #include <stdio.h>
-#include <stdlib.h> // Include this for memory allocation functions
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
-lexer_T* lexer_init_from_file(const char* filename) {
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("Error: Unable to open file %s\n", filename);
+char* read_file(const char* filename)
+{
+    FILE* fp;
+    char* line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    fp = fopen(filename, "rb");
+    if (fp == NULL) {
+        printf("Error reading file %s\n", filename);
         exit(1);
     }
 
-    fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
+    char* buffer = (char*) calloc(1, sizeof(char));
+    buffer[0] = '\0';
 
-    char* src = (char*)malloc(file_size + 1); // +1 for null terminator
-    fread(src, 1, file_size, file);
-    src[file_size] = '\0';
+    while ((read = getline(&line, &len, fp)) != -1) {
+        buffer = (char*) realloc(buffer, (strlen(buffer) + strlen(line) + 1) * sizeof(char));
+        strcat(buffer, line);
+    }
 
-    fclose(file);
-
-    return lexer_init(src);
+    fclose(fp);
+    if (line)
+        free(line);
+    
+    return buffer;
 }
 
-int main() {
-    lexer_T* lexer = lexer_init_from_file("examples/main.nac"); // Change the filename to your source code file
+void nac_lex(char * src)
+{
+    lexer_T* lexer = lexer_init(src);
 
     token_T* token;
     while ((token = lexer_tokenize(lexer))->type != TOKEN_EOF) {
-        // Process or print the token here as needed
         char* str = token_to_str(token);
         printf("%s\n", str);
         free(str);
     }
-
-    // Clean up
-    free(lexer->src);
     free(lexer);
-    
-    return 0;
+}
+
+void compile(char* src)
+{
+    lexer_T* lexer = lexer_init(src);
+    parser_T* parser = init_parser(lexer);
+    AST_T* root = parser_parse_program(parser);
+    print_ast(root, 0);
+    free(lexer);
+    free_ast(root);
+}
+
+void compile_file(const char* filename)
+{
+    char* src = read_file(filename);
+    printf("The language to parse is the following:\n");
+    printf("%s\n", src);
+    /* For demo, we show how the lexer performs tokenization. */
+    nac_lex(src);
+    compile(src);
+    free(src);
 }

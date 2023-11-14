@@ -25,6 +25,8 @@ const char* token_type_to_str(int type)
     case TOKEN_RPAREN: return "TOKEN_RPAREN";
     case TOKEN_ADD: return "TOKEN_ADD";
     case TOKEN_SUB: return "TOKEN_SUB";
+    case TOKEN_MUL: return "TOKEN_MUL";
+    case TOKEN_DIV: return "TOKEN_DIV";
     case TOKEN_SEMI: return "TOKEN_SEMI";
     case TOKEN_PRINT: return "TOKEN_PRINT";
     case TOKEN_EOF: return "TOKEN_EOF";
@@ -35,10 +37,10 @@ const char* token_type_to_str(int type)
 char* token_to_str(token_T* token)
 {
     const char* token_type_str = token_type_to_str(token->type);
-    const char* template = "{ type = %s, int = %d, value = %s }";
+    const char* template = "<type = %s, int = %d, value = `%s` >";
     char* str = calloc(strlen(template) + strlen(token_type_str) + 8, sizeof(char));
 
     sprintf(str, template, token_type_str, token->type, token->value);
-
+    
     return str;
 }

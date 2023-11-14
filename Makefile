@@ -10,6 +10,16 @@ $(EXEC): $(OBJECTS)
 %.o: %.c include/%.h
 	$(CC) -c $(FLAGS) $< -o $@
 
+EXAMPLES = $(wildcard examples/*.nac)
+SORTED_EXAMPLES = $(sort $(EXAMPLES))
+
+test: $(EXEC)
+	for example in $(SORTED_EXAMPLES); do \
+		echo "\nTesting $$example"; \
+		./$(EXEC) $$example; \
+		echo "Done with $$example\n"; \
+	done
+
 clean:
 	-rm *.out
 	-rm src/*.o
