@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+ * Initializes an AST node.
+ */
 AST_T* init_ast(token_T* token, AST_T* left, AST_T* right)
 {
     AST_T* ast = calloc(1, sizeof(struct AST_STRUCT));
@@ -12,6 +15,9 @@ AST_T* init_ast(token_T* token, AST_T* left, AST_T* right)
     return ast;
 }
 
+/* 
+ * Prints the AST.
+ */
 void print_ast(AST_T* root, int depth)
 {
     if (root != NULL) {
@@ -29,6 +35,9 @@ void print_ast(AST_T* root, int depth)
     }
 }
 
+/*
+ * Frees the memory for an AST node.
+ */
 void free_ast(AST_T* root)
 {
     if (root == NULL)
@@ -38,4 +47,3 @@ void free_ast(AST_T* root)
     free_ast(root->right);
     free(root);
 }
-

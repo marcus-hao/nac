@@ -24,10 +24,10 @@ typedef struct TOKEN_STRUCT {
     } type;
 } token_T;
 
-token_T* init_token(char* value, int type);
+token_T* init_token(char* value, int type);     /* Initializes the token */
 
-const char* token_type_to_str(int type);
+const char* token_type_to_str(int type);        /* Returns a string for the token type */
 
-char* token_to_str(token_T* token);
+char* token_to_str(token_T* token);             /* Returns a string for the token information */
 
 #endif
