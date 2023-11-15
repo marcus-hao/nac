@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MIN(a, b)   a < b ? a : b   /** Minimum between two variables */
+#define MIN(a, b)   a < b ? a : b   /** Returns the minimum between two variables */
 
 /*
  * This function takes in an input buffer and initializes the lexer with it.

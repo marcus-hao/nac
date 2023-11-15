@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * Initializes the token.
+ */
 token_T* init_token(char* value, int type)
 {
     token_T* token = calloc(1, sizeof(struct TOKEN_STRUCT));
@@ -12,6 +15,9 @@ token_T* init_token(char* value, int type)
     return token;
 }
 
+/*
+ * Returns a string for the token type.
+ */
 const char* token_type_to_str(int type)
 {
     switch(type) {
@@ -34,6 +40,9 @@ const char* token_type_to_str(int type)
     return "[ERROR] Unexpected token detected.";
 }
 
+/*
+ * Returns a string of the token information.
+ */
 char* token_to_str(token_T* token)
 {
     const char* token_type_str = token_type_to_str(token->type);
