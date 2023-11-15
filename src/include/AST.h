@@ -14,6 +14,4 @@ void free_ast(AST_T* root);                 /* Frees the memory for an AST node 
 
 void print_ast(AST_T* root, int depth);     /* Prints the AST */
 
-void print_tree(AST_T* node);
-
 #endif

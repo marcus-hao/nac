@@ -7,20 +7,20 @@
 typedef struct TOKEN_STRUCT {
     char* value;
     enum {
-        TOKEN_ID,
-        TOKEN_NUM,
-        TOKEN_COMMA,
-        TOKEN_NOTEQ,
-        TOKEN_DEFINE,
-        TOKEN_LPAREN,
-        TOKEN_RPAREN,
-        TOKEN_ADD,
-        TOKEN_SUB,
-        TOKEN_MUL,
-        TOKEN_DIV,
-        TOKEN_SEMI,
-        TOKEN_PRINT,
-        TOKEN_EOF
+        TOKEN_ID,       /* Identifier */
+        TOKEN_NUM,      /* Number */
+        TOKEN_COMMA,    /* , */
+        TOKEN_NOTEQ,    /* != */
+        TOKEN_DEFINE,   /* := */
+        TOKEN_LPAREN,   /* ( */
+        TOKEN_RPAREN,   /* ) */
+        TOKEN_ADD,      /* + */
+        TOKEN_SUB,      /* - */
+        TOKEN_MUL,      /* * */
+        TOKEN_DIV,      /* / */
+        TOKEN_SEMI,     /* ; */
+        TOKEN_PRINT,    /* print */
+        TOKEN_EOF       /* EOF */
     } type;
 } token_T;
 
