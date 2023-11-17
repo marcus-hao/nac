@@ -12,6 +12,4 @@ AST_T* init_ast(token_T* token, AST_T* left, AST_T* right);     /* Initializes a
 
 void free_ast(AST_T* root);                 /* Frees the memory for an AST node */
 
-void print_ast(AST_T* root, int depth);     /* Prints the AST */
-
 #endif

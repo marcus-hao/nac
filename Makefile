@@ -17,7 +17,7 @@ test: $(EXEC)
 	for example in $(SORTED_EXAMPLES); do \
 		echo "\nTesting $$example"; \
 		./$(EXEC) $$example; \
-		echo "Done with $$example\n"; \
+		echo "\nDone with $$example\n"; \
 	done
 
 clean:

@@ -15,26 +15,6 @@ AST_T* init_ast(token_T* token, AST_T* left, AST_T* right)
     return ast;
 }
 
-/* 
- * Prints the AST.
- */
-void print_ast(AST_T* root, int depth)
-{
-    if (root != NULL) {
-        if (root->token != NULL) {
-            // Print node information
-            printf("%*s%s: %s\n", depth * 2, "", token_type_to_str(root->token->type), root->token->value);
-        } else {
-            // Print non-terminal
-            printf("%*sNon-terminal\n", depth * 2, "");
-        }
-
-        // Recursively print children nodes
-        print_ast(root->left, depth + 1);
-        print_ast(root->right, depth + 1);
-    }
-}
-
 /*
  * Frees the memory for an AST node.
  */

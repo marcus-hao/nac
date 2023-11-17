@@ -46,6 +46,9 @@ char* read_file(const char* filename)
  */
 void nac_lex(char * src)
 {
+    printf("\nPerforming lexical analysis\n");
+    printf("---------------------------\n");
+    
     lexer_T* lexer = lexer_init(src);
 
     token_T* token;
@@ -67,7 +70,7 @@ void compile(char* src)
     lexer_T* lexer = lexer_init(src);
     parser_T* parser = init_parser(lexer);
     AST_T* root = parser_parse_program(parser);
-    print_ast(root, 0);
+    printf("Program parsed successfully!\n");
     free(lexer);
     free_ast(root);
 }
@@ -80,7 +83,7 @@ void compile(char* src)
 void compile_file(const char* filename)
 {
     char* src = read_file(filename);
-    printf("The language to parse is the following:\n");
+    printf("\nThe program to parse is the following:\n");
     printf("%s\n", src);
     /* For demo, we show how the lexer performs tokenization. */
     nac_lex(src);
