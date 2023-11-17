@@ -9,7 +9,7 @@
 /*
  * This function takes in an input buffer and initializes the lexer with it.
  */
-lexer_T* lexer_init(char* src)
+lexer_T* init_lexer(char* src)
 {
     lexer_T* lexer = calloc(1, sizeof(struct LEXER_STRUCT));
     lexer->src = src;
@@ -135,13 +135,13 @@ token_T* lexer_tokenize(lexer_T* lexer)
             if (lexer_peek(lexer, 1) == '=')
                 return lexer_advance_with(lexer, lexer_advance_with(lexer, init_token(":=", TOKEN_DEFINE)));
             else
-                printf("[ERROR]: Expected `:=`\n");
+                printf("[IllegalToken]: Expected `:=`\n");
         } break;
         case '!': {
             if (lexer_peek(lexer, 1) == '=')
                 return lexer_advance_with(lexer, lexer_advance_with(lexer, init_token("!=", TOKEN_NOTEQ)));
             else
-                printf("[ERROR]: Expected `!=`\n");
+                printf("[IllegalToken]: Expected `!=`\n");
         } break;
         case ',': return lexer_advance_current(lexer, TOKEN_COMMA);
         case '(': return lexer_advance_current(lexer, TOKEN_LPAREN);
@@ -152,7 +152,7 @@ token_T* lexer_tokenize(lexer_T* lexer)
         case '/': return lexer_advance_current(lexer, TOKEN_DIV);
         case ';': return lexer_advance_current(lexer, TOKEN_SEMI);
         case '\0': break;
-        default: printf("[ERROR]: Unexpected character `%c`\n", lexer->c); exit(1); break;
+        default: printf("[IllegalToken]: Unexpected character `%c`\n", lexer->c); exit(1); break;
         }
     }
 

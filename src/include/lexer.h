@@ -10,7 +10,7 @@ typedef struct LEXER_STRUCT {
     char c;                 /* The current character */
 } lexer_T;
 
-lexer_T* lexer_init(char* src);                 /* Initializes the lexer */
+lexer_T* init_lexer(char* src);                 /* Initializes the lexer */
 
 char lexer_peek(lexer_T* lexer, int step);      /* Looks one character ahead */
 

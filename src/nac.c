@@ -49,7 +49,7 @@ void nac_lex(char * src)
     printf("\nPerforming lexical analysis\n");
     printf("---------------------------\n");
     
-    lexer_T* lexer = lexer_init(src);
+    lexer_T* lexer = init_lexer(src);
 
     token_T* token;
     while ((token = lexer_tokenize(lexer))->type != TOKEN_EOF) {
@@ -67,7 +67,7 @@ void nac_lex(char * src)
  */
 void compile(char* src)
 {
-    lexer_T* lexer = lexer_init(src);
+    lexer_T* lexer = init_lexer(src);
     parser_T* parser = init_parser(lexer);
     AST_T* root = parser_parse_program(parser);
     printf("Program parsed successfully!\n");
